@@ -1,0 +1,253 @@
+/* =========================================================
+   Calculator — dark neumorphic chassis, phosphor-green display,
+   amber function keys (nod to classic LED/LCD calculators)
+   ========================================================= */
+
+:root {
+  --bg: #17171a;
+
+  --chassis-1: #2b2b2b;
+  --chassis-2: #1d1d1d;
+
+  --key-1: #333333;
+  --key-2: #262626;
+  --key-face-1: #2d2d2d;
+  --key-face-2: #474747;
+
+  --amber: #cf8a3d;
+  --amber-bright: #ffb648;
+  --amber-face-1: #b06b26;
+  --amber-face-2: #e8a24f;
+
+  --clear: #9c4630;
+  --clear-face-1: #7e3120;
+  --clear-face-2: #b8583c;
+
+  --display-bg: #0e1712;
+  --display-fg: #8fffb0;
+  --display-fg-dim: #4f8a68;
+
+  --radius: 12px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  font-family: "Courier New", ui-monospace, "SF Mono", Menlo, monospace;
+}
+
+/* screen-reader-only heading: kept in the DOM for a11y,
+   removed from visual layout without display:none (which
+   would hide it from screen readers too) */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- outer chassis ---------- */
+/* .calculator just stacks its two visible sections (display, keypad)
+   vertically and shrink-wraps to their width — it is NOT the grid
+   itself, since the buttons live one level deeper inside .keypad */
+
+.calculator {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: fit-content;
+  padding: 28px 24px 24px;
+  border-radius: 24px;
+  background: linear-gradient(160deg, var(--chassis-1), var(--chassis-2));
+  box-shadow:
+    25px 25px 75px rgba(0, 0, 0, 0.35),
+    -10px -10px 40px rgba(255, 255, 255, 0.02),
+    inset -4px -4px 12px rgba(0, 0, 0, 0.35),
+    inset 4px 4px 12px rgba(255, 255, 255, 0.03);
+}
+
+/* ---------- display ---------- */
+
+.display {
+  padding: 14px 16px 10px;
+  border-radius: 10px;
+  background: var(--display-bg);
+  box-shadow:
+    inset 0 3px 10px rgba(0, 0, 0, 0.6),
+    0 0 0 2px rgba(0, 0, 0, 0.5);
+  text-align: right;
+  overflow: hidden;
+}
+
+.display-previous {
+  min-height: 1.2em;
+  font-size: 0.95rem;
+  color: var(--display-fg-dim);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.display-current {
+  font-size: 2.1rem;
+  color: var(--display-fg);
+  text-shadow: 0 0 8px rgba(90, 247, 137, 0.35);
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- keypad: this is the actual grid ---------- */
+
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(4, 74px);
+  gap: 12px;
+}
+
+/* ---------- keys ---------- */
+
+.btn {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 62px;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(180deg, var(--key-1), var(--key-2));
+  box-shadow:
+    inset -6px 0 8px rgba(0, 0, 0, 0.15),
+    inset 0 -6px 8px rgba(0, 0, 0, 0.3),
+    0 0 0 2px rgba(0, 0, 0, 0.6),
+    6px 10px 16px rgba(0, 0, 0, 0.4);
+  color: #f2f2f2;
+  font-family: inherit;
+  font-size: 1.15rem;
+  font-weight: 400;
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.08s ease, transform 0.08s ease;
+}
+
+.btn::before {
+  content: "";
+  position: absolute;
+  inset: 3px 10px 12px 4px;
+  border-radius: 9px;
+  background: linear-gradient(100deg, var(--key-face-1), var(--key-face-2));
+  border-left: 1px solid rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.btn > * {
+  position: relative;
+}
+
+.btn:active {
+  filter: brightness(1.35);
+  transform: translateY(1px);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--display-fg);
+  outline-offset: 3px;
+}
+
+.btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btn-zero {
+  grid-column: span 2;
+  width: 100%;
+  justify-self: stretch;
+}
+
+/* ---------- function keys: clear / delete ---------- */
+
+.btn-clear,
+.btn-delete {
+  background: linear-gradient(180deg, var(--clear), #6f2c1d);
+  color: #ffe9e2;
+}
+
+.btn-clear::before,
+.btn-delete::before {
+  background: linear-gradient(100deg, var(--clear-face-1), var(--clear-face-2));
+  border-left: 1px solid rgba(255, 255, 255, 0.12);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ---------- operator keys ---------- */
+
+.btn-operator {
+  background: linear-gradient(180deg, var(--amber), #a4691f);
+  color: #241304;
+}
+
+.btn-operator::before {
+  background: linear-gradient(100deg, var(--amber-face-1), var(--amber-face-2));
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* ---------- equals: the one bright accent ---------- */
+
+.btn-equals {
+  background: linear-gradient(180deg, var(--amber-bright), #d98a20);
+  color: #2a1600;
+  font-weight: 600;
+}
+
+.btn-equals::before {
+  background: linear-gradient(100deg, #e8952c, #ffcf7a);
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- reduced motion ---------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+}
+
+/* ---------- small screens ---------- */
+
+@media (max-width: 400px) {
+  .keypad {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .calculator {
+    width: 90vw;
+    max-width: 340px;
+  }
+  .btn {
+    height: 56px;
+    font-size: 1.05rem;
+  }
+}
